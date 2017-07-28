@@ -7,6 +7,8 @@
 package gov.nasa.worldwindx.applications.antenna;
 
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
 import gov.nasa.worldwind.*;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.globes.Globe;
@@ -14,7 +16,6 @@ import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.terrain.Terrain;
 import gov.nasa.worldwind.util.*;
 
-import javax.media.opengl.*;
 import javax.xml.stream.*;
 import java.awt.*;
 import java.io.IOException;
