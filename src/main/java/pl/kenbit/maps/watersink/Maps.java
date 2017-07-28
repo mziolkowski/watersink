@@ -9,7 +9,7 @@ import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwindx.examples.ApplicationTemplate;
+//import gov.nasa.worldwindx.examples.ApplicationTemplate;
 
 public class Maps  extends ApplicationTemplate.AppFrame{
 

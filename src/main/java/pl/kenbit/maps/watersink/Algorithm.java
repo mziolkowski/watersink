@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import gov.nasa.worldwind.util.Logging;
 
 import gov.nasa.worldwind.WorldWindow;
-import gov.nasa.worldwindx.examples.ApplicationTemplate;
+//import gov.nasa.worldwindx.examples.ApplicationTemplate;
 import sun.util.logging.resources.logging;
 
 public class Algorithm extends ApplicationTemplate.AppFrame{
@@ -52,6 +52,8 @@ public class Algorithm extends ApplicationTemplate.AppFrame{
 	}
 	
 	
+	
+
 	public double getWaterPointLat() {
 		return waterPointLat;
 	}

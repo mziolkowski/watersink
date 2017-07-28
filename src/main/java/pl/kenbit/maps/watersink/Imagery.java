@@ -7,8 +7,10 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -23,8 +25,9 @@ import gov.nasa.worldwind.render.Offset;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 import gov.nasa.worldwind.render.SurfaceImage;
-import gov.nasa.worldwindx.examples.ApplicationTemplate;
-import gov.nasa.worldwindx.examples.util.ExampleUtil;
+//import gov.nasa.worldwindx.examples.ApplicationTemplate;
+//import gov.nasa.worldwindx.examples.util.ExampleUtil;
+//import gov.nasa.worldwindx.examples.ApplicationTemplate.AppFrame;
 
 public class Imagery {
 
@@ -101,7 +104,7 @@ public class Imagery {
 						insertBeforeCompass(AppFrame.this.getWwd(), layer);
 
 						// Set the view to look at the imported image.
-						ExampleUtil.goTo(getWwd(), sector);
+//						ExampleUtil.goTo(getWwd(), sector);
 
 					}
 
@@ -159,25 +162,13 @@ public class Imagery {
 
 					// Add the layer to the model and update the
 					// application's layer panel.
-					insertBeforeCompass(AppFrame.this.getWwd(), layer);
+					ApplicationTemplate.insertBeforeCompass(AppFrame.this.getWwd(), layer);
 
 					// Set the view to look at the imported image.
-					ExampleUtil.goTo(getWwd(), sector);
+//					ExampleUtil.goTo(getWwd(), sector);
 
 				}
 
-				private void insertBeforeCompass(WorldWindow wwd, SurfaceImageLayer layer) {
-					// Insert the layer into the layer list just before the
-					// compass.
-					int compassPosition = 0;
-					LayerList layers = wwd.getModel().getLayers();
-					for (Layer l : layers) {
-						if (l instanceof CompassLayer)
-							compassPosition = layers.indexOf(l);
-					}
-					layers.add(compassPosition, layer);
-
-				}
 			});
 			}
 			} catch (Exception e) {
@@ -206,6 +197,35 @@ public class Imagery {
 			pp.setAttributes(attrs);
 			layer.addRenderable(pp);
 		}
+		
+		public static AppFrame start(String appName, Class appFrameClass)
+	    {
+	        if (Configuration.isMacOS() && appName != null)
+	        {
+	            System.setProperty("com.apple.mrj.application.apple.menu.about.name", appName);
+	        }
+
+	        try
+	        {
+	            final AppFrame frame = (AppFrame) appFrameClass.newInstance();
+	            frame.setTitle(appName);
+	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	            java.awt.EventQueue.invokeLater(new Runnable()
+	            {
+	                public void run()
+	                {
+	                    frame.setVisible(true);
+	                }
+	            });
+
+	            return frame;
+	        }
+	        catch (Exception e)
+	        {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {

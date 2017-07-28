@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-package gov.nasa.worldwindx.examples;
+package pl.kenbit.maps.watersink;
 
 import gov.nasa.worldwind.*;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -13,7 +13,6 @@ import gov.nasa.worldwind.exception.WWAbsentRequirementException;
 import gov.nasa.worldwind.layers.*;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
 import gov.nasa.worldwind.util.*;
-import gov.nasa.worldwindx.examples.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +29,6 @@ public class ApplicationTemplate
     {
         protected WorldWindow wwd;
         protected StatusBar statusBar;
-        protected ToolTipController toolTipController;
-        protected HighlightController highlightController;
 
         public AppPanel(Dimension canvasSize, boolean includeStatusBar)
         {
@@ -44,8 +41,6 @@ public class ApplicationTemplate
             Model m = (Model) WorldWind.createConfigurationComponent(AVKey.MODEL_CLASS_NAME);
             this.wwd.setModel(m);
 
-            // Setup a select listener for the worldmap click-and-go feature
-            this.wwd.addSelectListener(new ClickAndGoSelectListener(this.getWwd(), WorldMapLayer.class));
 
             this.add((Component) this.wwd, BorderLayout.CENTER);
             if (includeStatusBar)
@@ -56,8 +51,6 @@ public class ApplicationTemplate
             }
 
             // Add controllers to manage highlighting and tool tips.
-            this.toolTipController = new ToolTipController(this.getWwd(), AVKey.DISPLAY_NAME, null);
-            this.highlightController = new HighlightController(this.getWwd(), SelectEvent.ROLLOVER);
         }
 
         protected WorldWindow createWorldWindow()
@@ -82,7 +75,6 @@ public class ApplicationTemplate
 
         protected AppPanel wwjPanel;
         protected JPanel controlPanel;
-        protected LayerPanel layerPanel;
         protected StatisticsPanel statsPanel;
 
         public AppFrame()
@@ -112,11 +104,7 @@ public class ApplicationTemplate
             if (includeLayerPanel)
             {
                 this.controlPanel = new JPanel(new BorderLayout(10, 10));
-                this.layerPanel = new LayerPanel(this.getWwd());
-                this.controlPanel.add(this.layerPanel, BorderLayout.CENTER);
-                this.controlPanel.add(new FlatWorldPanel(this.getWwd()), BorderLayout.NORTH);
                 this.getContentPane().add(this.controlPanel, BorderLayout.WEST);
-//              MojeEdytowanie dodanie controlPanel.setVisible(false);
                 controlPanel.setVisible(false);
             }
 
@@ -196,10 +184,6 @@ public class ApplicationTemplate
          * @deprecated Use getControlPanel instead.
          * @return This application's layer panel.
          */
-        public LayerPanel getLayerPanel()
-        {
-            return this.layerPanel;
-        }
 
         public JPanel getControlPanel()
         {
@@ -211,21 +195,6 @@ public class ApplicationTemplate
             return statsPanel;
         }
 
-        public void setToolTipController(ToolTipController controller)
-        {
-            if (this.wwjPanel.toolTipController != null)
-                this.wwjPanel.toolTipController.dispose();
-
-            this.wwjPanel.toolTipController = controller;
-        }
-
-        public void setHighlightController(HighlightController controller)
-        {
-            if (this.wwjPanel.highlightController != null)
-                this.wwjPanel.highlightController.dispose();
-
-            this.wwjPanel.highlightController = controller;
-        }
     }
 
     public static void insertBeforeCompass(WorldWindow wwd, Layer layer)
@@ -328,10 +297,5 @@ public class ApplicationTemplate
         }
     }
 
-    public static void main(String[] args)
-    {
-        // Call the static start method like this from the main method of your derived class.
-        // Substitute your application's name for the first argument.
-        ApplicationTemplate.start("World Wind Application", AppFrame.class);
-    }
+ 
 }
