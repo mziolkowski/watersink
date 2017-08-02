@@ -18,20 +18,19 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Provides a base application framework for simple WorldWind examples. Examine other examples in this package to see
- * how it's used.
+ * Provides a base application framework for simple WorldWind examples. Examine
+ * other examples in this package to see how it's used.
  *
  * @version $Id: ApplicationTemplate.java 2115 2014-07-01 17:58:16Z tgaskins $
  */
-public class ApplicationTemplate
-{
-    public static class AppPanel extends JPanel
-    {
+public class ApplicationTemplate {
+
+    public static class AppPanel extends JPanel {
+
         protected WorldWindow wwd;
         protected StatusBar statusBar;
 
-        public AppPanel(Dimension canvasSize, boolean includeStatusBar)
-        {
+        public AppPanel(Dimension canvasSize, boolean includeStatusBar) {
             super(new BorderLayout());
 
             this.wwd = this.createWorldWindow();
@@ -41,10 +40,8 @@ public class ApplicationTemplate
             Model m = (Model) WorldWind.createConfigurationComponent(AVKey.MODEL_CLASS_NAME);
             this.wwd.setModel(m);
 
-
             this.add((Component) this.wwd, BorderLayout.CENTER);
-            if (includeStatusBar)
-            {
+            if (includeStatusBar) {
                 this.statusBar = new StatusBar();
                 this.add(statusBar, BorderLayout.PAGE_END);
                 this.statusBar.setEventSource(wwd);
@@ -53,63 +50,54 @@ public class ApplicationTemplate
             // Add controllers to manage highlighting and tool tips.
         }
 
-        protected WorldWindow createWorldWindow()
-        {
+        protected WorldWindow createWorldWindow() {
             return new WorldWindowGLCanvas();
         }
 
-        public WorldWindow getWwd()
-        {
+        public WorldWindow getWwd() {
             return wwd;
         }
 
-        public StatusBar getStatusBar()
-        {
+        public StatusBar getStatusBar() {
             return statusBar;
         }
     }
 
-    public static class AppFrame extends JFrame
-    {
+    public static class AppFrame extends JFrame {
+
         private Dimension canvasSize = new Dimension(1000, 800);
 
         protected AppPanel wwjPanel;
         protected JPanel controlPanel;
         protected StatisticsPanel statsPanel;
 
-        public AppFrame()
-        {
+        public AppFrame() {
             this.initialize(true, true, false);
         }
 
-        public AppFrame(Dimension size)
-        {
+        public AppFrame(Dimension size) {
             this.canvasSize = size;
             this.initialize(true, true, false);
         }
 
-        public AppFrame(boolean includeStatusBar, boolean includeLayerPanel, boolean includeStatsPanel)
-        {
+        public AppFrame(boolean includeStatusBar, boolean includeLayerPanel, boolean includeStatsPanel) {
             this.initialize(includeStatusBar, includeLayerPanel, includeStatsPanel);
         }
 
-        protected void initialize(boolean includeStatusBar, boolean includeLayerPanel, boolean includeStatsPanel)
-        {
+        protected void initialize(boolean includeStatusBar, boolean includeLayerPanel, boolean includeStatsPanel) {
             // Create the WorldWindow.
             this.wwjPanel = this.createAppPanel(this.canvasSize, includeStatusBar);
             this.wwjPanel.setPreferredSize(canvasSize);
 
             // Put the pieces together.
             this.getContentPane().add(wwjPanel, BorderLayout.CENTER);
-            if (includeLayerPanel)
-            {
+            if (includeLayerPanel) {
                 this.controlPanel = new JPanel(new BorderLayout(10, 10));
                 this.getContentPane().add(this.controlPanel, BorderLayout.WEST);
                 controlPanel.setVisible(false);
             }
 
-            if (includeStatsPanel || System.getProperty("gov.nasa.worldwind.showStatistics") != null)
-            {
+            if (includeStatsPanel || System.getProperty("gov.nasa.worldwind.showStatistics") != null) {
                 this.statsPanel = new StatisticsPanel(this.wwjPanel.getWwd(), new Dimension(250, canvasSize.height));
                 this.getContentPane().add(this.statsPanel, BorderLayout.EAST);
             }
@@ -120,19 +108,16 @@ public class ApplicationTemplate
             this.getWwd().addSelectListener(new ViewControlsSelectListener(this.getWwd(), viewControlsLayer));
 
             // Register a rendering exception listener that's notified when exceptions occur during rendering.
-            this.wwjPanel.getWwd().addRenderingExceptionListener(new RenderingExceptionListener()
-            {
-                public void exceptionThrown(Throwable t)
-                {
-                    if (t instanceof WWAbsentRequirementException)
-                    {
+            this.wwjPanel.getWwd().addRenderingExceptionListener(new RenderingExceptionListener() {
+                public void exceptionThrown(Throwable t) {
+                    if (t instanceof WWAbsentRequirementException) {
                         String message = "Computer does not meet minimum graphics requirements.\n";
                         message += "Please install up-to-date graphics driver and try again.\n";
                         message += "Reason: " + t.getMessage() + "\n";
                         message += "This program will end when you press OK.";
 
                         JOptionPane.showMessageDialog(AppFrame.this, message, "Unable to Start Program",
-                            JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.ERROR_MESSAGE);
                         System.exit(-1);
                     }
                 }
@@ -140,10 +125,8 @@ public class ApplicationTemplate
 
             // Search the layer list for layers that are also select listeners and register them with the World
             // Window. This enables interactive layers to be included without specific knowledge of them here.
-            for (Layer layer : this.wwjPanel.getWwd().getModel().getLayers())
-            {
-                if (layer instanceof SelectListener)
-                {
+            for (Layer layer : this.wwjPanel.getWwd().getModel().getLayers()) {
+                if (layer instanceof SelectListener) {
                     this.getWwd().addSelectListener((SelectListener) layer);
                 }
             }
@@ -155,28 +138,23 @@ public class ApplicationTemplate
             this.setResizable(true);
         }
 
-        protected AppPanel createAppPanel(Dimension canvasSize, boolean includeStatusBar)
-        {
+        protected AppPanel createAppPanel(Dimension canvasSize, boolean includeStatusBar) {
             return new AppPanel(canvasSize, includeStatusBar);
         }
 
-        public Dimension getCanvasSize()
-        {
+        public Dimension getCanvasSize() {
             return canvasSize;
         }
 
-        public AppPanel getWwjPanel()
-        {	
+        public AppPanel getWwjPanel() {
             return wwjPanel;
         }
 
-        public WorldWindow getWwd()
-        {
+        public WorldWindow getWwd() {
             return this.wwjPanel.getWwd();
         }
 
-        public StatusBar getStatusBar()
-        {
+        public StatusBar getStatusBar() {
             return this.wwjPanel.getStatusBar();
         }
 
@@ -184,67 +162,58 @@ public class ApplicationTemplate
          * @deprecated Use getControlPanel instead.
          * @return This application's layer panel.
          */
-
-        public JPanel getControlPanel()
-        {
+        public JPanel getControlPanel() {
             return this.controlPanel;
         }
 
-        public StatisticsPanel getStatsPanel()
-        {
+        public StatisticsPanel getStatsPanel() {
             return statsPanel;
         }
 
     }
 
-    public static void insertBeforeCompass(WorldWindow wwd, Layer layer)
-    {
+    public static void insertBeforeCompass(WorldWindow wwd, Layer layer) {
         // Insert the layer into the layer list just before the compass.
         int compassPosition = 0;
         LayerList layers = wwd.getModel().getLayers();
-        for (Layer l : layers)
-        {
-            if (l instanceof CompassLayer)
+        for (Layer l : layers) {
+            if (l instanceof CompassLayer) {
                 compassPosition = layers.indexOf(l);
+            }
         }
         layers.add(compassPosition, layer);
     }
 
-    public static void insertBeforePlacenames(WorldWindow wwd, Layer layer)
-    {
+    public static void insertBeforePlacenames(WorldWindow wwd, Layer layer) {
         // Insert the layer into the layer list just before the placenames.
         int compassPosition = 0;
         LayerList layers = wwd.getModel().getLayers();
-        for (Layer l : layers)
-        {
-            if (l instanceof PlaceNameLayer)
+        for (Layer l : layers) {
+            if (l instanceof PlaceNameLayer) {
                 compassPosition = layers.indexOf(l);
+            }
         }
         layers.add(compassPosition, layer);
     }
 
-    public static void insertAfterPlacenames(WorldWindow wwd, Layer layer)
-    {
+    public static void insertAfterPlacenames(WorldWindow wwd, Layer layer) {
         // Insert the layer into the layer list just after the placenames.
         int compassPosition = 0;
         LayerList layers = wwd.getModel().getLayers();
-        for (Layer l : layers)
-        {
-            if (l instanceof PlaceNameLayer)
+        for (Layer l : layers) {
+            if (l instanceof PlaceNameLayer) {
                 compassPosition = layers.indexOf(l);
+            }
         }
         layers.add(compassPosition + 1, layer);
     }
 
-    public static void insertBeforeLayerName(WorldWindow wwd, Layer layer, String targetName)
-    {
+    public static void insertBeforeLayerName(WorldWindow wwd, Layer layer, String targetName) {
         // Insert the layer into the layer list just before the target layer.
         int targetPosition = 0;
         LayerList layers = wwd.getModel().getLayers();
-        for (Layer l : layers)
-        {
-            if (l.getName().indexOf(targetName) != -1)
-            {
+        for (Layer l : layers) {
+            if (l.getName().indexOf(targetName) != -1) {
                 targetPosition = layers.indexOf(l);
                 break;
             }
@@ -252,50 +221,38 @@ public class ApplicationTemplate
         layers.add(targetPosition, layer);
     }
 
-    static
-    {
+    static {
         System.setProperty("java.net.useSystemProxies", "true");
-        if (Configuration.isMacOS())
-        {
+        if (Configuration.isMacOS()) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "World Wind Application");
             System.setProperty("com.apple.mrj.application.growbox.intrudes", "false");
             System.setProperty("apple.awt.brushMetalLook", "true");
-        }
-        else if (Configuration.isWindowsOS())
-        {
+        } else if (Configuration.isWindowsOS()) {
             System.setProperty("sun.awt.noerasebackground", "true"); // prevents flashing during window resizing
         }
     }
 
-    public static AppFrame start(String appName, Class appFrameClass)
-    {
-        if (Configuration.isMacOS() && appName != null)
-        {
+    public static AppFrame start(String appName, Class appFrameClass) {
+        if (Configuration.isMacOS() && appName != null) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", appName);
         }
 
-        try
-        {
+        try {
             final AppFrame frame = (AppFrame) appFrameClass.newInstance();
             frame.setTitle(appName);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            java.awt.EventQueue.invokeLater(new Runnable()
-            {
-                public void run()
-                {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
                     frame.setVisible(true);
                 }
             });
 
             return frame;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
- 
 }
