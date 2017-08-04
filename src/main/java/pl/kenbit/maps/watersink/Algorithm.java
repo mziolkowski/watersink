@@ -5,7 +5,6 @@ import static java.lang.Math.abs;
 import java.util.ArrayList;
 import gov.nasa.worldwind.util.Logging;
 
-import gov.nasa.worldwind.WorldWindow;
 
 public class Algorithm {
 
@@ -131,10 +130,6 @@ public class Algorithm {
                 booleanElevationsMap[(int) (abs(waterPointLat) - coordinateListInteger.get(i))][(int) (abs(waterPointLon) - coordinateListInteger.get(i + 1))] = true;
             }
         }
-//		System.out.println(listOfFloodCoordinate + " Punkty zalane");
-//		System.out.println(listOfFloodValue + " Wspolrzedne X i Y zalanych punktow");
-//		System.out.println(" ");							
-
     }
 
     public void calculation2(ArrayList<Integer> coordinateListInteger, Double[][] elevationsMap, ArrayList<Double> coordinateListDouble, ArrayList<Double> listOfFloodValue, Boolean[][] booleanElevationsMap, ArrayList<Double> listOfFloodCoordinate, Boolean[][] waterDirectionMap) {
@@ -170,17 +165,6 @@ public class Algorithm {
             }
         }
 
-//	System.out.println(listOfPointsInteger);
-//	System.out.println(wetListInteger);
-//	System.out.println(" ");
-//        System.out.println(" ");
-//        System.out.println("TABLICA WaterDirection");
-//        for (int m = 0; m < waterDirectionMap.length; m++) {
-//            for (int n = 0; n < waterDirectionMap[m].length; n++) {
-//                System.out.print(waterDirectionMap[m][n] ? "#" : "-" + " ");
-//            }
-//            System.out.println(" ");
-//        }
     }
 
     public void startCalculation() {
@@ -201,6 +185,7 @@ public class Algorithm {
         this.coordinateListDouble = coordinateListDouble;
         this.listOfFloodValue = listOfFloodValue;
         this.elevationsMap = elevationsMap;
+        
     }
 
     public SectorData getMaxMinLatLon() {

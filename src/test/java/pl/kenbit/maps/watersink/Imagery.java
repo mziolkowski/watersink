@@ -4,10 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
-
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -25,51 +22,56 @@ import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 import gov.nasa.worldwind.render.SurfaceImage;
 import java.util.ArrayList;
-import pl.kenbit.maps.watersink.ElevationService;
 
 public class Imagery {
 
     private static DataHolder dataHolder;
+    private static int placemarkNr;
 
     public static class AppFrame extends ApplicationTemplate.AppFrame {
-        
+
         public double getResolution(DataSource data) {
-                ArrayList<LatLon> latlons = new ArrayList<LatLon>();
-                Globe globe = AppFrame.this.getWwd().getModel().getGlobe();
+            ArrayList<LatLon> latlons = new ArrayList<LatLon>();
+            Globe globe = AppFrame.this.getWwd().getModel().getGlobe();
 
-                for (double i = 0, a = 0; i < data.getWidthTab(); i++, a += 0.001) {
-                    for (double j = 0, b = 0; j < data.getLengthTab(); j++, b += 0.001) {
+            for (double i = 0, a = 0; i < data.getWidthTab(); i++, a += 0.001) {
+                for (double j = 0, b = 0; j < data.getLengthTab(); j++, b += 0.001) {
 
-                        latlons.add(LatLon.fromDegrees(data.getMinGeoLat() + a,
-                                data.getMinGeoLon() + b));
-                    }
+                    latlons.add(LatLon.fromDegrees(data.getMinGeoLat() + a,
+                            data.getMinGeoLon() + b));
                 }
-
-                Sector sector = Sector.boundingSector(latlons);
-                double[] elevations = new double[latlons.size()];
-//        Iterate until the best resolution is achieved.Use the elevation model to determine the best elevation.
-                Double targetResolution = globe.getElevationModel().getBestResolution(sector);
-                Double actualResolution = Double.MAX_VALUE;
-
-                while (actualResolution > targetResolution) {
-                    actualResolution = globe.getElevations(sector, latlons, targetResolution, elevations);
-                    // Uncomment the two lines below if you want to watch the
-                    // resolution converge
-                    System.out.printf("Target resolution = %s, Actual resolution = %s\n",
-                            Double.toString(targetResolution), Double.toString(actualResolution));
-                    try {
-                        Thread.sleep(0, 5); // give the system a chance to
-                        // retrieve data from the disk cache
-                        // or the server
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return actualResolution;
             }
 
-        private static int placemarkNr;
+            Sector sector = Sector.boundingSector(latlons);
+            double[] elevations = new double[latlons.size()];
+//        Iterate until the best resolution is achieved.Use the elevation model to determine the best elevation.
+            Double targetResolution = globe.getElevationModel().getBestResolution(sector);
+            Double actualResolution = Double.MAX_VALUE;
+
+            while (actualResolution > targetResolution) {
+                int counter = 0;
+                    do {
+                        actualResolution = globe.getElevations(sector, latlons, targetResolution, elevations);
+                        // Uncomment the two lines below if you want to watch the
+                        // resolution converge
+                        System.out.printf("Target resolution = %s, Actual resolution = %s\n",
+                                Double.toString(targetResolution), Double.toString(actualResolution));
+                        try {
+                            Thread.sleep(0, 5); // give the system a chance to
+                            // retrieve data from the disk cache
+                            // or the server
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        counter++;
+                    } while (counter <= 30);
+
+                    System.out.println("Zmniejsz obszar aby znaleźć najlepszą rozdzielczość");
+                break;
+            }
+
+            return actualResolution;
+        }
 
         public class MapService implements ElevationService {
 
@@ -86,7 +88,6 @@ public class Imagery {
         public AppFrame() {
             // Show the WAIT cursor because the import may take a while.
             this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-            // this.elevation = new Elevation(dataHolder, this.getWwd());
 
             // Import the imagery on a thread other than the event-dispatch
             // thread to avoid freezing the UI.
@@ -116,7 +117,7 @@ public class Imagery {
                 data.makeData();
                 getResolution(data);
                 dataHolder = algorithm.imp(new Algorithm(new Maps(data, getMapServ())));
-//                if (dataHolder.getWaterPointLat() > dataHolder.getLengthTab()) {
+
                 // Add the SurfaceImage to a layer.
                 SurfaceImageLayer layer = new SurfaceImageLayer();
                 layer.setName("Imported Surface Image");
@@ -131,7 +132,7 @@ public class Imagery {
                         Angle.fromDegrees(dataHolder.getMaxMinLatLon().getMin().getLon()),
                         Angle.fromDegrees(dataHolder.getMaxMinLatLon().getMax().getLon()));
 
-                BufferedImage image = new BufferedImage(dataHolder.getWidthTab(), dataHolder.getLengthTab(), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage image = new BufferedImage(dataHolder.getLengthTab(), dataHolder.getWidthTab(), BufferedImage.TYPE_INT_ARGB);
                 SurfaceImage surfaceImage = new SurfaceImage(image, sector);
 
                 SwingUtilities.invokeLater(new Runnable() {
@@ -144,10 +145,10 @@ public class Imagery {
 
                         for (int i = 0; i < waterDirection.length; i++) {
                             for (int j = 0; j < waterDirection[i].length; j++) {
-                                if (waterDirection[i][waterDirection[i].length - 1 - j] == true) {
-                                    image.setRGB(i, j, (blueColor.getRGB()));
+                                if (waterDirection[waterDirection.length - 1 - i][j] == true) {
+                                    image.setRGB(j, i, (blueColor.getRGB()));
                                 } else {
-                                    image.setRGB(i, j, (transparentColor.getRGB()));
+                                    image.setRGB(j, i, (transparentColor.getRGB()));
                                 }
                             }
                         }
@@ -158,8 +159,6 @@ public class Imagery {
                         // application's layer panel.
                         insertBeforeCompass(AppFrame.this.getWwd(), layer);
 
-                        // Set the view to look at the imported image.
-//						ExampleUtil.goTo(getWwd(), sector);
                     }
 
                     private void insertBeforeCompass(WorldWindow wwd, SurfaceImageLayer layer) {
@@ -197,39 +196,16 @@ public class Imagery {
             attrs.setImageAddress("gov/nasa/worldwindx/examples/images/plain-white.png");
             attrs.setImageColor(new Color(1f, 1f, 1f, 0.6f));
             attrs.setScale(0.6);
-            // attrs.setImageOffset(new Offset(19d, 8d, AVKey.PIXELS,
-            // AVKey.PIXELS));
             attrs.setLabelOffset(new Offset(0.9d, 0.6d, AVKey.FRACTION, AVKey.FRACTION));
             pp.setAttributes(attrs);
             layer.addRenderable(pp);
         }
 
-        public static AppFrame start(String appName, Class appFrameClass) {
-            if (Configuration.isMacOS() && appName != null) {
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", appName);
-            }
-
-            try {
-                final AppFrame frame = (AppFrame) appFrameClass.newInstance();
-                frame.setTitle(appName);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        frame.setVisible(true);
-                    }
-                });
-
-                return frame;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
     }
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        ApplicationTemplate.start("Imagery", Imagery.AppFrame.class);
+        ApplicationTemplate.start("Floodplains", Imagery.AppFrame.class);
 
     }
 

@@ -1,11 +1,6 @@
 package pl.kenbit.maps.watersink;
 
-import gov.nasa.worldwind.WorldWindow;
 import java.util.ArrayList;
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Sector;
-import gov.nasa.worldwind.globes.Globe;
 
 public class Maps {
 
@@ -125,7 +120,7 @@ public class Maps {
             b = 0;
             for (int j = 0; j <= elevationsMap[i].length - 1; j++, b += 0.001) {
 //                    
-                elevationsMap[j][i] = nasa.getElevForLatLon(data.getMinGeoLat() + a, data.getMinGeoLon() + b);
+                elevationsMap[i][j] = nasa.getElevForLatLon(data.getMinGeoLat() + a, data.getMinGeoLon() + b);
 
             }
         }

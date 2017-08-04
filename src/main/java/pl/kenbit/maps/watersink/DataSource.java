@@ -4,99 +4,101 @@ import static java.lang.Math.abs;
 import java.util.Scanner;
 
 public class DataSource {
-    private double waterPointLat = 42.94; 							// szerokosc geo. zr. wody
-    private double waterPointLon = -122.12;							// dlugosc geo. zr. wody
-    private double rightTopPointLat = 43;						// szerokosc geo. prawego-g�rngo rogu analizowanego obszaru
-    private double rightTopPointLon = -122.08;						// dlugosc geo. prawego-g�rnego rogu analizowanego obszaru
-    private double leftBottomPointLat = 42.9;						// szerokosc geo. lewego-dolnego rogu analizowanego obszaru
-    private double leftBottomPointLon = -122.18;						// dlugosc geo. lewego-dolnego rogu analizowanego obszaru
-    private double sourceWaterHeight = 1888;
-//    private double waterPointLat = 52.291; 							// szerokosc geo. zr. wody
-//    private double waterPointLon = 20.987;							// dlugosc geo. zr. wody
-//    private double rightTopPointLat = 52.3;						// szerokosc geo. prawego-g�rngo rogu analizowanego obszaru
-//    private double rightTopPointLon = 21;						// dlugosc geo. prawego-g�rnego rogu analizowanego obszaru
-//    private double leftBottomPointLat = 52.2;						// szerokosc geo. lewego-dolnego rogu analizowanego obszaru
-//    private double leftBottomPointLon = 20.9;						// dlugosc geo. lewego-dolnego rogu analizowanego obszaru
-//    private double sourceWaterHeight = 78;						// wysokosc zr. wody
-    private int lengthTab;									// dlugosc tablicy
-    private int widthTab;									// szerokosc tablicy
-    private double slatIteration;							// licznik s�u��cy do przeuni�cia punkt�w tablicy
-    private double slonIteration;							// licznik s�u��cy do przeuni�cia punkt�w tablicy
-    private double leftBottomPointLatSource;				// szerokosc geo. lewego-dolnego rogu analizowanego obszaru zgodna z mapa
-    private double leftBottomPointLonSource;				// dlugosc geo. lewego-dolnego rogu analizowanego obszaru zgodna z mapa
+
+    private double waterPointLat; 						// szerokosc geo. zr. wody
+    private double waterPointLon;						// dlugosc geo. zr. wody
+    private double rightTopPointLat;						// szerokosc geo. prawego-g�rngo rogu analizowanego obszaru
+    private double rightTopPointLon;						// dlugosc geo. prawego-g�rnego rogu analizowanego obszaru
+    private double leftBottomPointLat;						// szerokosc geo. lewego-dolnego rogu analizowanego obszaru
+    private double leftBottomPointLon;						// dlugosc geo. lewego-dolnego rogu analizowanego obszaru
+    private double sourceWaterHeight;
+
+//    private double waterPointLat = 42.94; 							
+//    private double waterPointLon = -122.12;							
+//    private double rightTopPointLat = 43.10;						
+//    private double rightTopPointLon = -122.00;					
+//    private double leftBottomPointLat = 42.88;					
+//    private double leftBottomPointLon = -122.22;					
+//    private double sourceWaterHeight = 1888;
+
+//    private double waterPointLat = 52.291; 						
+//    private double waterPointLon = 20.987;						
+//    private double rightTopPointLat = 52.3;						
+//    private double rightTopPointLon = 21;						
+//    private double leftBottomPointLat = 52.2;						
+//    private double leftBottomPointLon = 20.9;						
+//    private double sourceWaterHeight = 78;						
+    private int lengthTab;							// dlugosc tablicy
+    private int widthTab;							// szerokosc tablicy
+    private double leftBottomPointLatSource;                        		// szerokosc geo. lewego-dolnego rogu analizowanego obszaru zgodna z mapa
+    private double leftBottomPointLonSource;                            	// dlugosc geo. lewego-dolnego rogu analizowanego obszaru zgodna z mapa
     private double rightTopPointLatSource;					// szerokosc geo. prawego-g�rngo rogu analizowanego obszaru zgodna z mapa
     private double rightTopPointLonSource;					// dlugosc geo. prawego-g�rnego rogu analizowanego obszaru zgodna z mapa
     private double waterSourcePointLat;						// szerokosc geo. zr. wody zgodna z mapa
     private double waterSourcePointLon;						// dlugosc geo. zr. wody zgodna z mapa
-    private double minGeoLat;								// min. wartosc szerokosci obszaru
-    private double maxGeoLat;								// max. wartosc szerokosci obszaru
-    private double minGeoLon;								// min. wartosc d�ugosci obszaru
-    private double maxGeoLon;								// max. wartosc d�ugosci obszaru
+    private double minGeoLat;							// min. wartosc szerokosci obszaru
+    private double maxGeoLat;							// max. wartosc szerokosci obszaru
+    private double minGeoLon;							// min. wartosc d�ugosci obszaru
+    private double maxGeoLon;							// max. wartosc d�ugosci obszaru
 
     public DataSource makeData() {
 
         Scanner scan = new Scanner(System.in);
         //Wskazanie lewego-dolnego punktu
-//		System.out.println("Podaj szerokosc geograficzna lewego-dolnego punktu");
-//		leftBottomPointLat = scan.nextDouble();
+		System.out.println("Podaj szerokosc geograficzna lewego-dolnego punktu");
+		leftBottomPointLat = scan.nextDouble();
         setLeftBottomPointLatSource(leftBottomPointLat);
-//		System.out.println("Podaj dlugosc geograficzna lewego-dolnego punkty");
-//		leftBottomPointLon = scan.nextDouble();
+		System.out.println("Podaj dlugosc geograficzna lewego-dolnego punkty");
+		leftBottomPointLon = scan.nextDouble();
         setLeftBottomPointLonSource(leftBottomPointLon);
 
 //		//Wskazanie prawego-gornego punktu
-//		System.out.println("Podaj szerokosc geograficzna prawego-górnego punktu");
-//		rightTopPointLat = scan.nextDouble();
+		System.out.println("Podaj szerokosc geograficzna prawego-górnego punktu");
+		rightTopPointLat = scan.nextDouble();
         setRightTopPointLatSource(rightTopPointLat);
-//		System.out.println("Podaj dlugosc geograficzna prawego-górnego punkty");
-//		rightTopPointLon = scan.nextDouble();
+		System.out.println("Podaj dlugosc geograficzna prawego-górnego punkty");
+		rightTopPointLon = scan.nextDouble();
         setRightTopPointLonSource(rightTopPointLon);
 
 //		//Wskazanie punktu zr. wody
-//		System.out.println("Podaj szerokosc geograficzna zr. wody z zakresu " + leftBottomPointLat + " " + rightTopPointLat );
-//		setWaterPointLat(scan.nextDouble());
+		System.out.println("Podaj szerokosc geograficzna zr. wody z zakresu " + leftBottomPointLat + " " + rightTopPointLat );
+		setWaterPointLat(scan.nextDouble());
         setWaterSourcePointLat(getWaterPointLat());
-//		System.out.println("Podaj dlugosc geograficzna zr. wody z zakresu " + leftBottomPointLon + " " + rightTopPointLon);
-//		setWaterPointLon(scan.nextDouble());
+		System.out.println("Podaj dlugosc geograficzna zr. wody z zakresu " + leftBottomPointLon + " " + rightTopPointLon);
+		setWaterPointLon(scan.nextDouble());
         setWaterSourcePointLon(getWaterPointLon());
 //				
-//		System.out.println("Podaj wysokosc zródła wody");
-//		setSourceWaterHeight(scan.nextInt());
+		System.out.println("Podaj wysokosc zródła wody");
+		setSourceWaterHeight(scan.nextInt());
 
         //Okreslenie wymiaru tablicy
         if (rightTopPointLat < leftBottomPointLat) {
             do {
                 rightTopPointLat += 0.001;
-                setWidthTab(getWidthTab()+ 1);
+                setWidthTab(getWidthTab() + 1);
             } while (rightTopPointLat <= leftBottomPointLat);
 
         } else {
             do {
                 leftBottomPointLat += 0.001;
-                setWidthTab(getWidthTab()+ 1);
+                setWidthTab(getWidthTab() + 1);
             } while (leftBottomPointLat <= rightTopPointLat);
         }
 
         if (rightTopPointLon < leftBottomPointLon) {
             do {
                 rightTopPointLon += 0.001;
-                setLengthTab(getLengthTab()+ 1);
+                setLengthTab(getLengthTab() + 1);
             } while (rightTopPointLon <= leftBottomPointLon);
 
         } else {
             do {
                 leftBottomPointLon += 0.001;
-                setLengthTab(getLengthTab()+ 1);
+                setLengthTab(getLengthTab() + 1);
             } while (leftBottomPointLon <= rightTopPointLon);
         }
 
-//        for (double i = getWaterPointLat(); i <= rightTopPointLat; i += 0.001) {
-//            slatIteration++;
-//        }
-//
-//        for (double j = getWaterPointLon(); j <= rightTopPointLon; j += 0.001) {
-//            slonIteration++;
-//        }
+        setLengthTab(getLengthTab() + 1);
 
         //Przesuniecie tabicy do wsp. 0,0
         leftBottomPointLat = 0;
@@ -105,17 +107,6 @@ public class DataSource {
         rightTopPointLon = abs(1000 * (abs(rightTopPointLon) - abs(leftBottomPointLonSource)));
         setWaterPointLat(abs(1000 * (abs(waterPointLat) - abs(leftBottomPointLatSource))));
         setWaterPointLon(abs(1000 * (abs(waterPointLon) - abs(leftBottomPointLonSource))));
-//
-//        if (getWaterPointLat() > getLengthTab()) {
-//            rightTopPointLat = leftBottomPointLat + getLengthTab();
-//            rightTopPointLon = leftBottomPointLon + getWidthTab();
-//        } else {
-//            rightTopPointLat = leftBottomPointLat + getWidthTab();
-//            rightTopPointLon = leftBottomPointLon + getLengthTab();
-//        }
-//
-//        setWaterPointLat(rightTopPointLat - slonIteration);
-//        setWaterPointLon(rightTopPointLon - slatIteration);
 
         if (getRightTopPointLatSource() > getLeftBottomPointLatSource()) {
             maxGeoLat = getRightTopPointLatSource();
